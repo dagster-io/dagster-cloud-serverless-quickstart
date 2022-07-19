@@ -1,0 +1,116 @@
+name: Dagster Branch Deployments
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+env:
+  DAGSTER_CLOUD_URL: ${{ secrets.DAGSTER_CLOUD_URL }}
+
+jobs:
+  load_build_info:
+    runs-on: ubuntu-latest
+    outputs:
+      build_info: ${{ steps.load-build-info.outputs.build_info }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Load build info
+        id: load-build-info
+        uses: dagster-io/cloud-branch-deployments-action/load_build_info@benpankow/dynamic-matrix
+        with:
+          dagster_cloud_file: cloud_workspace.yaml
+
+  dagster_cloud_build_push:
+    runs-on: ubuntu-latest
+    needs: load_build_info
+    name: Dagster Serverless Branch Deployments
+    strategy:
+      fail-fast: false
+      matrix:
+        location: ${{ fromJSON(needs.load_build_info.outputs.build_info) }}
+    steps:
+      - name: Get serverless organization info
+        uses: dagster-io/dagster-cloud-serverless-action/registry_info@main
+        with:
+          organization_id: ${{ secrets.ORGANIZATION_ID }}
+          deployment: prod
+        env:
+          DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Notify build start
+        uses: dagster-io/cloud-branch-deployments-action/notify@main
+        with:
+          organization_id: ${{ secrets.ORGANIZATION_ID }}
+          action: "pending"
+          pr: "${{ github.event.number }}"
+          location: ${{ toJson(matrix.location) }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Copy user code template file
+        uses: dagster-io/dagster-cloud-serverless-action/copy_template@main
+        with:
+          target_directory: ${{ matrix.location.directory }}
+
+      # See https://github.com/docker/build-push-action/ for more info
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ matrix.location.build_folder }}
+          push: true
+          tags: "${{ env.REGISTRY_URL }}:${{ github.sha }}"
+          labels: |
+            branch=${{ github.head_ref }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to Dagster Cloud
+        uses: dagster-io/cloud-branch-deployments-action/deploy@benpankow/dynamic-matrix
+        id: deploy
+        with:
+          organization_id: ${{ secrets.ORGANIZATION_ID }}
+          pr: "${{ github.event.number }}"
+          pr_status: "${{ github.event.pull_request.merged && 'merged' || github.event.pull_request.state }}"
+          location: ${{ toJson(matrix.location) }}
+          image_tag: ${{ github.sha }}
+          registry: ${{ env.REGISTRY_URL }}
+        env:
+          DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
+
+      # Optional steps, leaves PR comment about build status
+      - name: Notify build success
+        uses: dagster-io/cloud-branch-deployments-action/notify@main
+        with:
+          organization_id: ${{ secrets.ORGANIZATION_ID }}
+          action: "complete"
+          pr: "${{ github.event.number }}"
+          location: ${{ toJson(matrix.location) }}
+          deployment: ${{ steps.deploy.outputs.deployment }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Notify build failure
+        if: ${{ failure() }}
+        uses: dagster-io/cloud-branch-deployments-action/notify@main
+        with:
+          organization_id: ${{ secrets.ORGANIZATION_ID }}
+          action: "failed"
+          pr: "${{ github.event.number }}"
+          location: ${{ toJson(matrix.location) }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
