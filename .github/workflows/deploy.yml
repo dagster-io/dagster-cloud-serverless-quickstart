@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       build_info: ${{ steps.load-build-info.outputs.build_info }}
+      secrets_set: ${{ steps.check-secrets.outputs.okay }}
     steps:
       - uses: actions/checkout@v2
       - name: Load build info
@@ -19,13 +20,7 @@ jobs:
         uses: dagster-io/cloud-branch-deployments-action/load_build_info@benpankow/dynamic-matrix
         with:
           dagster_cloud_file: cloud_workspace.yaml
-
-  check_secrets:
-    runs-on: ubuntu-latest
-    outputs:
-      okay: ${{ steps.check-secrets.outputs.okay }}
-    steps:
-      - name: check for secrets needed to run demo
+      - name: check for secrets needed to deploy
         id: check-secrets
         run: |
           if [ ! -z "$DAGSTER_CLOUD_API_TOKEN" ]; then
@@ -34,8 +29,8 @@ jobs:
 
   dagster_cloud_build_push:
     runs-on: ubuntu-latest
-    needs: [load_build_info, check_secrets]
-    if: ${{ needs.check_secrets.outputs.okay }}
+    needs: load_build_info
+    if: ${{ needs.load_build_info.outputs.secrets_set }}
     name: Dagster Serverless Deploy
     strategy:
       fail-fast: false
