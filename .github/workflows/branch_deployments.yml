@@ -67,6 +67,7 @@ jobs:
         uses: dagster-io/dagster-cloud-serverless-action/copy_template@main
         with:
           target_directory: ${{ matrix.location.directory }}
+          secrets: ${{ toJson(secrets) }}
 
       # See https://github.com/docker/build-push-action/ for more info
       - name: Build and push Docker image
