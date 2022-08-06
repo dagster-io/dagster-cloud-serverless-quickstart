@@ -1,2 +1,2 @@
-./my-dagster-project
+dagster
 dagster-cloud
