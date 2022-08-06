@@ -1,6 +1,6 @@
 # Dagster Cloud Serverless Deployment Quickstart
 
-## Create a new repository from this template
+## Create a new project from this template
 
 Click the `Use this Template` button and provide details for your new repo.
 
@@ -17,4 +17,4 @@ Set up secrets on your newly created repository by navigating to the `Settings` 
 
 ## Verify Builds are Successful
 
-At this point, the Workflow should complete successfully. If builds are failing, ensure that your secrets are properly set and that your depoyment has finished activating.
+At this point, the Workflow should complete successfully. If builds are failing, ensure that your secrets are properly set and that your deployment has finished activating.

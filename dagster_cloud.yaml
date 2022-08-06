@@ -1,4 +1,4 @@
 locations:
   - location_name: example_location
     code_source:
-      python_file: repo.py
+      package_name: my_dagster_project

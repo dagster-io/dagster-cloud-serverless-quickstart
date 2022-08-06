@@ -1,3 +1,2 @@
-dagster
+./my-dagster-project
 dagster-cloud
-requests
