@@ -1,2 +1,2 @@
-dagster
+.
 dagster-cloud
