@@ -2,6 +2,11 @@ name: Serverless Branch Deployments
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
+concurrency: 
+  # Cancel in-progress runs on same branch
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   DAGSTER_CLOUD_URL: ${{ secrets.DAGSTER_CLOUD_URL }}
 
