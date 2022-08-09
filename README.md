@@ -1,6 +1,14 @@
 # Dagster Cloud Serverless Deployment Quickstart
 
-## Create a new project from this template
+Welcome to your Dagster Cloud sample code repo. Here, you can find the code that's being deployed to your Dagster Cloud instance.
+
+Pushing to production will automatically kick off a [workflow](./.github/workflows/deploy.yml) which will redeploy your code to your `prod` deployment.
+
+Creating a pull request will kick off a [workflow](./.github/workflows/deploy.yml) which will create a new [**Branch Deployment**](https://docs.dagster.io/dagster-cloud/developing-testing/branch-deployments), an ephemeral deployment where you can test your changes.
+
+# Setting up Quickstart Template Manually
+
+If you had Dagster Cloud clone and set up this repo for you, no need to follow these instructions.
 
 Click the `Use this Template` button and provide details for your new repo.
 
