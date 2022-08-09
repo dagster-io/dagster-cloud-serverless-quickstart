@@ -12,7 +12,6 @@ def cereals():
     return cereal_rows
 
 
-@asset
-def nabisco_cereals(cereals):
-    """Cereals manufactured by Nabisco"""
-    return [row for row in cereals if row["mfr"] == "N"]
+# NOTE: If you add another asset that depends on this one, to rematerilize it, you'll need to set up
+# an IO manager that can move the data across runs.
+# For more details, visit https://docs.dagster.io/concepts/io-management/io-managers#applying-io-managers-to-assets
