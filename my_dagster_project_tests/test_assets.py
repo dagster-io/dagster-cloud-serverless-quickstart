@@ -1,11 +1,7 @@
-from my_dagster_project.assets import nabisco_cereals
+from my_dagster_project.assets import cereals
 
 
-def test_nabisco_cereals():
-    cereals = [
-        {"name": "cereal1", "mfr": "N"},
-        {"name": "cereal2", "mfr": "K"},
-    ]
-    result = nabisco_cereals(cereals)
-    assert len(result) == 1
-    assert result == [{"name": "cereal1", "mfr": "N"}]
+def test_cereals():
+    result = cereals()
+    print(result)
+    assert len(result) == 77
