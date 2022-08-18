@@ -2,7 +2,7 @@ name: Serverless Branch Deployments
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
-concurrency: 
+concurrency:
   # Cancel in-progress runs on same branch
   group: ${{ github.ref }}
   cancel-in-progress: true
@@ -41,6 +41,7 @@ jobs:
         with:
           dagster_cloud_api_token: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
           location: ${{ toJson(matrix.location) }}
-          env_vars: ${{ toJson(secrets) }}
+          # Uncomment to pass through Github Action secrets as a JSON string of key-value pairs
+          # env_vars: ${{ toJson(secrets) }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
