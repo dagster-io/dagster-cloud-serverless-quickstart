@@ -22,7 +22,7 @@ def my_dagster_project():
     # are accessing your private buckets.
     #   * Learn about adding secrets in Serverless at https://docs.dagster.io/dagster-cloud/deployment/serverless#adding-secrets
 
-    # if os.getenv("DAGSTER_CLOUD_IS_BRANCH_DEPLOYMENT"):
+    # if os.getenv("DAGSTER_CLOUD_IS_BRANCH_DEPLOYMENT") == "1":
     #     s3_prefix = f"MY_S3_PREFIX/branch_{os.getenv('DAGSTER_CLOUD_PULL_REQUEST_ID')}"
     # else:
     #     s3_prefix = "MY_S3_PREFIX"
