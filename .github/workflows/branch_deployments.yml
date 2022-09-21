@@ -43,5 +43,6 @@ jobs:
           location: ${{ toJson(matrix.location) }}
           # Uncomment to pass through Github Action secrets as a JSON string of key-value pairs
           # env_vars: ${{ toJson(secrets) }}
+          organization_id: ${{ secrets.ORGANIZATION_ID }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
