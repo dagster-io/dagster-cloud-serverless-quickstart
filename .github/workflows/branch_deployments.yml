@@ -39,6 +39,7 @@ jobs:
       - name: Build and deploy to Dagster Cloud serverless
         uses: dagster-io/dagster-cloud-action/actions/serverless_branch_deploy@v0.1
         with:
+          organization_id: ${{ secrets.ORGANIZATION_ID }}
           dagster_cloud_api_token: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
           location: ${{ toJson(matrix.location) }}
           # Uncomment to pass through Github Action secrets as a JSON string of key-value pairs
