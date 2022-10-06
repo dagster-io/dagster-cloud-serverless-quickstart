@@ -7,5 +7,6 @@ if __name__ == "__main__":
         install_requires=[
             "dagster",
             "dagster_aws",
+            "dagster_cloud",
         ],
     )
