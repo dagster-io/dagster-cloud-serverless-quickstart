@@ -26,7 +26,7 @@ jobs:
           ref: ${{ github.head_ref }}
           path: project-repo
       - name: Pex build and deploy
-        uses: dagster-io/dagster-cloud-action/actions/build_deploy_pex@main
+        uses: dagster-io/dagster-cloud-action/actions/build_deploy_pex@pex-testing
         with:
           dagster_cloud_file: "$GITHUB_WORKSPACE/project-repo/dagster_cloud.yaml"
           build_output_dir: "$GITHUB_WORKSPACE/build"
