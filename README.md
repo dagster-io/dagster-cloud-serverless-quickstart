@@ -26,3 +26,19 @@ Set up secrets on your newly created repository by navigating to the `Settings` 
 ## Verify Builds are Successful
 
 At this point, the Workflow should complete successfully. If builds are failing, ensure that your secrets are properly set and that your deployment has finished activating.
+
+## Developing Locally
+
+To run this project locally with dagit first install its local developement dependencies
+
+```bash
+pip install -e ".[dev]"
+```
+
+Once you've done this, you can run:
+
+```
+dagit
+```
+
+to view this repo in Dagster's UI, Dagit.
