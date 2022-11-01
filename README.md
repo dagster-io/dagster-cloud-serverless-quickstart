@@ -27,9 +27,9 @@ Set up secrets on your newly created repository by navigating to the `Settings` 
 
 At this point, the Workflow should complete successfully. If builds are failing, ensure that your secrets are properly set and that your deployment has finished activating.
 
-## Developing Locally
+## Next Steps
 
-To run this project locally with dagit first install its local developement dependencies
+Now that your GitHub repository is setup with CI/CD to deploy to Dagster Cloud, you can add your own Dagster code. To run this project locally with dagit first install its local developement dependencies
 
 ```bash
 pip install -e ".[dev]"
@@ -42,3 +42,5 @@ dagit
 ```
 
 to view this repo in Dagster's UI, Dagit.
+
+You can also copy any existing [Dagster examples or quickstart projects](https://github.com/dagster-io/dagster/tree/master/examples) into this GitHub repository.
