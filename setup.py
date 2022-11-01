@@ -9,4 +9,5 @@ if __name__ == "__main__":
             "dagster-aws",
             "dagster-cloud",
         ],
+        extras_require={"dev": ["dagit"]},
     )
