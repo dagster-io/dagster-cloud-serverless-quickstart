@@ -20,6 +20,9 @@ jobs:
     name: Pex build and deploy
     strategy:
       fail-fast: false
+    env:
+      # force a custom base image until we auto publish new images
+      CUSTOM_BASE_IMAGE: "ghcr.io/dagster-io/dagster-cloud-serverless-base-py3.8:1.0.15-pex-execute-run"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -27,6 +30,7 @@ jobs:
           ref: ${{ github.head_ref }}
           path: project-repo
       - name: Pex build and deploy
+        # pin action to the pex-testing branch so we can iterate faster
         uses: dagster-io/dagster-cloud-action/actions/build_deploy_pex@pex-testing
         with:
           dagster_cloud_file: "$GITHUB_WORKSPACE/project-repo/dagster_cloud.yaml"
