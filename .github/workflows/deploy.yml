@@ -1,3 +1,74 @@
+name: Serverless Prod Deployment
+on:
+  push:
+    branches:
+      - "main"
+      - "master"
+concurrency:
+  # Cancel in-progress deploys to main branch
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+env:
+  DAGSTER_CLOUD_URL: ${{ secrets.DAGSTER_CLOUD_URL }}
+  DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
+
+jobs:
+  dagster_cloud_default_deploy:
+    name: Dagster Serverless Deploy
+    runs-on: ubuntu-latest
+    outputs:
+      build_info: ${{ steps.parse-workspace.outputs.build_info }}
+    
+    steps:
+      - name: Parse cloud workspace
+        if: env.ENABLE_CODE_OVERLAY != 'true'
+        id: parse-workspace
+        uses: dagster-io/dagster-cloud-action/actions/utils/parse_workspace@v0.1
+        with:
+          dagster_cloud_file: dagster_cloud.yaml
+
+      - name: Checkout
+        if: env.ENABLE_CODE_OVERLAY == 'true'
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.sha }}
+          path: project-repo
+          
+      - name: Build and deploy code overlay
+        if: env.ENABLE_CODE_OVERLAY == 'true'
+        uses: dagster-io/dagster-cloud-action/actions/build_deploy_pex@pex-testing
+        with:
+          dagster_cloud_file: "$GITHUB_WORKSPACE/project-repo/dagster_cloud.yaml"
+          build_output_dir: "$GITHUB_WORKSPACE/build"
+          python_version: "3.8"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dagster_cloud_docker_deploy:
+    name: Dagster Serverless Docker Deploy
+    runs-on: ubuntu-latest
+    if: needs.dagster_cloud_default_deploy.outputs.build_info
+    needs: dagster_cloud_default_deploy
+    strategy:
+      fail-fast: false
+      matrix:
+        location: ${{ fromJSON(needs.dagster_cloud_default_deploy.outputs.build_info) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Build and deploy to Dagster Cloud serverless
+        uses: dagster-io/dagster-cloud-action/actions/serverless_prod_deploy@v0.1
+        with:
+          dagster_cloud_api_token: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
+          location: ${{ toJson(matrix.location) }}
+          # Uncomment to pass through Github Action secrets as a JSON string of key-value pairs
+          # env_vars: ${{ toJson(secrets) }}
+          organization_id: ${{ secrets.ORGANIZATION_ID }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 name: Build and deploy (using pex files)
 
 # workflow works for both full and branch deployments
@@ -11,7 +82,6 @@ on:
   workflow_dispatch:
 
 env:
-  DAGSTER_CLOUD_URL: ${{ secrets.DAGSTER_CLOUD_URL }}
   DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
   # pin a custom base image until we auto publish new images
   CUSTOM_BASE_IMAGE: "ghcr.io/dagster-io/dagster-cloud-serverless-base-py3.8:1.0.15-pex-execute-run"
