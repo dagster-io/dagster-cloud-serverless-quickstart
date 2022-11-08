@@ -21,22 +21,22 @@ jobs:
     
     steps:
       - name: Parse cloud workspace
-        if: env.ENABLE_CODE_OVERLAY != 'true'
+        if: env.ENABLE_PYTHON_EXECUTABLE != 'true'
         id: parse-workspace
         uses: dagster-io/dagster-cloud-action/actions/utils/parse_workspace@v0.1
         with:
           dagster_cloud_file: dagster_cloud.yaml
 
       - name: Checkout
-        if: env.ENABLE_CODE_OVERLAY == 'true'
+        if: env.ENABLE_PYTHON_EXECUTABLE == 'true'
         uses: actions/checkout@v3
         with:
           ref: ${{ github.sha }}
           path: project-repo
           
-      - name: Build and deploy code overlay
-        if: env.ENABLE_CODE_OVERLAY == 'true'
-        uses: dagster-io/dagster-cloud-action/actions/build_deploy_code_overlay@pex-testing
+      - name: Build and deploy Python executable
+        if: env.ENABLE_PYTHON_EXECUTABLE == 'true'
+        uses: dagster-io/dagster-cloud-action/actions/build_deploy_python_executable@pex-testing
         with:
           dagster_cloud_file: "$GITHUB_WORKSPACE/project-repo/dagster_cloud.yaml"
           build_output_dir: "$GITHUB_WORKSPACE/build"
