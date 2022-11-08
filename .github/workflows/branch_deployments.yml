@@ -1,11 +1,9 @@
-name: Serverless Prod Deployment
+name: Serverless Branch Deployments
 on:
-  push:
-    branches:
-      - "main"
-      - "master"
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
 concurrency:
-  # Cancel in-progress deploys to main branch
+  # Cancel in-progress runs on same branch
   group: ${{ github.ref }}
   cancel-in-progress: true
 env:
@@ -59,7 +57,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - name: Build and deploy to Dagster Cloud serverless
-        uses: dagster-io/dagster-cloud-action/actions/serverless_prod_deploy@v0.1
+        uses: dagster-io/dagster-cloud-action/actions/serverless_branch_deploy@v0.1
         with:
           dagster_cloud_api_token: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
           location: ${{ toJson(matrix.location) }}
