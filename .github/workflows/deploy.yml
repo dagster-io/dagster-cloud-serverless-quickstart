@@ -36,7 +36,7 @@ jobs:
           
       - name: Build and deploy code overlay
         if: env.ENABLE_CODE_OVERLAY == 'true'
-        uses: dagster-io/dagster-cloud-action/actions/build_deploy_pex@pex-testing
+        uses: dagster-io/dagster-cloud-action/actions/build_deploy_code_overlay@pex-testing
         with:
           dagster_cloud_file: "$GITHUB_WORKSPACE/project-repo/dagster_cloud.yaml"
           build_output_dir: "$GITHUB_WORKSPACE/build"
