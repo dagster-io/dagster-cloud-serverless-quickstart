@@ -6,31 +6,51 @@ concurrency:
   # Cancel in-progress runs on same branch
   group: ${{ github.ref }}
   cancel-in-progress: true
-
 env:
   DAGSTER_CLOUD_URL: ${{ secrets.DAGSTER_CLOUD_URL }}
+  DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
 
 jobs:
-  parse_workspace:
+  dagster_cloud_default_deploy:
+    name: Dagster Serverless Deploy
     runs-on: ubuntu-latest
     outputs:
       build_info: ${{ steps.parse-workspace.outputs.build_info }}
+    
     steps:
-      - uses: actions/checkout@v3
       - name: Parse cloud workspace
+        if: env.ENABLE_PYTHON_EXECUTABLE != 'true'
         id: parse-workspace
         uses: dagster-io/dagster-cloud-action/actions/utils/parse_workspace@v0.1
         with:
           dagster_cloud_file: dagster_cloud.yaml
 
-  dagster_cloud_build_push:
+      - name: Checkout
+        if: env.ENABLE_PYTHON_EXECUTABLE == 'true'
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          path: project-repo
+          
+      - name: Build and deploy Python executable
+        if: env.ENABLE_PYTHON_EXECUTABLE == 'true'
+        uses: dagster-io/dagster-cloud-action/actions/build_deploy_python_executable@pex-v0.1
+        with:
+          dagster_cloud_file: "$GITHUB_WORKSPACE/project-repo/dagster_cloud.yaml"
+          build_output_dir: "$GITHUB_WORKSPACE/build"
+          python_version: "3.8"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dagster_cloud_docker_deploy:
+    name: Dagster Serverless Docker Deploy
     runs-on: ubuntu-latest
-    needs: parse_workspace
-    name: Dagster Serverless Deploy
+    if: needs.dagster_cloud_default_deploy.outputs.build_info
+    needs: dagster_cloud_default_deploy
     strategy:
       fail-fast: false
       matrix:
-        location: ${{ fromJSON(needs.parse_workspace.outputs.build_info) }}
+        location: ${{ fromJSON(needs.dagster_cloud_default_deploy.outputs.build_info) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -46,3 +66,4 @@ jobs:
           organization_id: ${{ secrets.ORGANIZATION_ID }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
