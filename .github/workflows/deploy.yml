@@ -23,7 +23,7 @@ jobs:
       - name: Parse cloud workspace
         if: env.ENABLE_PYTHON_EXECUTABLE != 'true'
         id: parse-workspace
-        uses: dagster-io/dagster-cloud-action/actions/utils/parse_workspace@v0.1
+        uses: dagster-io/dagster-cloud-action/actions/utils/parse_workspace@pex-v0.1
         with:
           dagster_cloud_file: dagster_cloud.yaml
 
