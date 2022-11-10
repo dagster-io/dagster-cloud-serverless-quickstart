@@ -31,7 +31,7 @@ jobs:
         if: env.ENABLE_PYTHON_EXECUTABLE == 'true'
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.head_ref }}
           path: project-repo
           
       - name: Build and deploy Python executable
