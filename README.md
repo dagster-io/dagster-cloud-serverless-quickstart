@@ -1,5 +1,7 @@
 # Dagster Cloud Serverless Deployment Quickstart
 
+> :point_right: You do not need to use this repo to use Dagster Cloud Serverless. When you create an account on Dagster Cloud, it creates a repo for you with the GitHub actions installed. If you want to deploy another project you can use the "Add code locations" button on the Deployments page. This repo provides an alternative way to create a project linked to Dagster Cloud serverless.
+
 Welcome to your Dagster Cloud sample code repo. Here, you can find the code that's being deployed to your Dagster Cloud instance. For more in-depth information, check out our [Serverless](https://docs.dagster.io/dagster-cloud/deployment/serverless) docs.
 
 Pushing to production will automatically kick off a [workflow](./.github/workflows/deploy.yml) which will redeploy your code to your `prod` deployment.
@@ -21,7 +23,14 @@ Set up secrets on your newly created repository by navigating to the `Settings` 
 | Name                      | Description                                                                                                                                                                                                     |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `DAGSTER_CLOUD_API_TOKEN` | An agent token, for more details see [the Dagster Cloud docs](https://docs.dagster.cloud/auth#managing-user-and-agent-tokens).                                                                                  |
-| `ORGANIZATION_ID`         | The organization ID of your Dagster Cloud organization, found in the URL. For example, `pied-piper` if your organization is found at `https://dagster.cloud/pied-piper` or `https://pied-piper.dagster.cloud/`. |
+
+## Update workflows
+
+Replace the `ORGANIZATION_NAME` in both `.github/workflows/deploy.yml` and `.github/workflows/branch_deployments.yml` with your Dagster cloud organization name:
+
+```
+  DAGSTER_CLOUD_URL: "http://ORGANIZATION_NAME.dagster.cloud"
+```
 
 ## Verify Builds are Successful
 

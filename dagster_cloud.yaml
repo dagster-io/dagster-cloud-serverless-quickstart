@@ -1,4 +1,4 @@
 locations:
-  - location_name: example_location
-    code_source:
-      package_name: my_dagster_project
+- code_source:
+    package_name: quickstart_etl
+  location_name: my-project

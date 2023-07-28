@@ -1,2 +1,3 @@
 load_from:
-  - python_package: my_dagster_project
+  - python_package: quickstart_etl
+
