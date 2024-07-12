@@ -66,38 +66,18 @@ jobs:
         with:
           command: "ci build --build-strategy=python-executable --python-version ${{ env.PYTHON_VERSION }}"
 
-      # Otherwise, set up and perform Docker build
-
-      # Any value can be used as the docker image tag. It is recommended to use a unique value
-      # for each build so that multiple builds do not overwrite each other.
-      - name: Generate docker image tag
-        id: generate-image-tag
-        if: steps.prerun.outputs.result == 'docker-deploy'
-        run: echo "IMAGE_TAG=$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" >> $GITHUB_ENV && echo $IMAGE_TAG
 
       # Enable buildx for caching
       - name: Set up Docker Buildx
         if: steps.prerun.outputs.result == 'docker-deploy'
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and upload Docker image for "quickstart_etl"
-        if: steps.prerun.outputs.result == 'docker-deploy'
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ env.IMAGE_REGISTRY }}:${{ env.IMAGE_TAG }}-quickstart_etl
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Update build session with image tag for quickstart_etl
-        id: ci-set-build-output-example-location
+      - name: Run Docker build
+        id: run-docker-build
         if: steps.prerun.outputs.result == 'docker-deploy'
         uses: dagster-io/dagster-cloud-action/actions/utils/dagster-cloud-cli@v0.1
         with:
-          command: "ci set-build-output --location-name=quickstart_etl --image-tag=$IMAGE_TAG-quickstart_etl"
-
-
+          command: "ci build --build-strategy=docker"
 
       # Deploy all code locations in this build session to Dagster Cloud
       - name: Deploy to Dagster Cloud
