@@ -1,4 +1,4 @@
 locations:
 - code_source:
-    package_name: quickstart_etl
+    package_name: quickstart_etl.definitions
   location_name: my-project

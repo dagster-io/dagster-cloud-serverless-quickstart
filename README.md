@@ -4,9 +4,9 @@
 
 Welcome to your Dagster Cloud sample code repo. Here, you can find the code that's being deployed to your Dagster Cloud instance. For more in-depth information, check out our [Serverless](https://docs.dagster.io/dagster-cloud/deployment/serverless) docs.
 
-Pushing to production will automatically kick off a [workflow](./.github/workflows/deploy.yml) which will redeploy your code to your `prod` deployment.
+Pushing to production will automatically kick off a [workflow](./.github/workflows/dagster-plus-deploy.yml) which will redeploy your code to your `prod` deployment.
 
-Creating a pull request will kick off a [workflow](./.github/workflows/deploy.yml) which will create a new [**Branch Deployment**](https://docs.dagster.io/dagster-cloud/developing-testing/branch-deployments), an ephemeral deployment where you can test your changes.
+Creating a pull request will kick off a [workflow](./.github/workflows/dagster-plus-deploy.yml) which will create a new [**Branch Deployment**](https://docs.dagster.io/dagster-cloud/developing-testing/branch-deployments), an ephemeral deployment where you can test your changes.
 
 # Setting up Quickstart Template Manually
 
@@ -26,10 +26,10 @@ Set up secrets on your newly created repository by navigating to the `Settings` 
 
 ## Update workflows
 
-Replace the `ORGANIZATION_NAME` in both `.github/workflows/deploy.yml` and `.github/workflows/branch_deployments.yml` with your Dagster cloud organization name:
+Replace the `ORGANIZATION_NAME` in `.github/workflows/dagster-plus-deploy.yml` with your Dagster cloud organization name:
 
 ```
-  DAGSTER_CLOUD_URL: "http://ORGANIZATION_NAME.dagster.cloud"
+  DAGSTER_CLOUD_URL: "https://ORGANIZATION_NAME.dagster.cloud"
 ```
 
 ## Verify Builds are Successful
