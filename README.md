@@ -18,11 +18,11 @@ Click the `Use this Template` button and provide details for your new repo.
 
 ## Set up secrets
 
-Set up secrets on your newly created repository by navigating to the `Settings` panel in your repo, clicking `Secrets` on the sidebar, and selecting `Actions`. Then, click `New repository secret`.
+Set up secrets on your newly created repository by navigating to the `Settings` panel in your repo, clicking `Secrets and variables` on the sidebar, and selecting `Actions`. Then, click `New repository secret`.
 
-| Name                      | Description                                                                                                                                                                                                     |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DAGSTER_CLOUD_API_TOKEN` | An agent token, for more details see [the Dagster Cloud docs](https://docs.dagster.cloud/auth#managing-user-and-agent-tokens).                                                                                  |
+| Name                      | Description                                                                                                                                    |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DAGSTER_CLOUD_API_TOKEN` | An agent token, for more details see [the Dagster Cloud docs](https://docs.dagster.io/deployment/dagster-plus/management/tokens/agent-tokens). |
 
 ## Update workflows
 
@@ -47,9 +47,9 @@ pip install -e ".[dev]"
 Once you've done this, you can run:
 
 ```
-dagit
+dg dev
 ```
 
-to view this repo in Dagster's UI, Dagit.
+to view this repo in Dagster UI
 
 You can also copy any existing [Dagster examples or quickstart projects](https://github.com/dagster-io/dagster/tree/master/examples) into this GitHub repository.
