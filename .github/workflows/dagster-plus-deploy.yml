@@ -17,7 +17,7 @@ env:
   PYTHON_VERSION: '3.10'
   DAGSTER_CLOUD_YAML_PATH: '.'
   DAGSTER_CLOUD_FILE: 'dagster_cloud.yaml'
-  DAGSTER_CLOUD_ORGANIZATION: 'testing-serverless-github-app'
+  DAGSTER_CLOUD_ORGANIZATION: 'ORGANIZATION_NAME'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
