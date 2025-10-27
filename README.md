@@ -1,6 +1,6 @@
 # Dagster+ Serverless deployment quickstart
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > You do not need to use this repo to use Dagster+ Serverless. When you create an account on Dagster+, it creates a repo for you with the GitHub actions installed. If you want to deploy another project, you can use the **Add code locations** button on the Deployments page. This repo provides an alternative way to create a project linked to Dagster+ Serverless.
 
 Welcome to your Dagster+ sample code repo. Here, you can find the code that's being deployed to your Dagster+ instance. For more information on Dagster+ Serverless, see our [Serverless docs](https://docs.dagster.io/deployment/dagster-plus/serverless).
@@ -30,10 +30,10 @@ Set up secrets on your newly created repo by navigating to the **Settings** pane
 
 ## 3. Update workflows
 
-Replace the `ORGANIZATION_NAME` in `.github/workflows/dagster-plus-deploy.yml` with your Dagster+ organization name:
+Replace the `DAGSTER_CLOUD_ORGANIZATION` in `.github/workflows/dagster-plus-deploy.yml` with your Dagster+ organization name:
 
 ```
-  DAGSTER_CLOUD_URL: "https://ORGANIZATION_NAME.dagster.cloud"
+  DAGSTER_CLOUD_ORGANIZATION: "YOUR_ORGANIZATION_NAME_HERE"
 ```
 
 ## 4. Verify builds are successful
@@ -51,7 +51,7 @@ Now that your GitHub repo is setup with CI/CD to deploy to Dagster+, you can run
 uv pip install -e ".[dev]"
 ```
 
-or 
+or
 
 ```bash
 pip install -e ".[dev]"
